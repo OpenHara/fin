@@ -10,7 +10,7 @@ type Config struct {
 	DatabasePassword string `env:"DATABASE_PASSWORD,required"`
 }
 
-func MustGet() (*Config, error) {
+func Get() (*Config, error) {
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
 		return nil, err

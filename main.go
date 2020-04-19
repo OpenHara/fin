@@ -5,16 +5,23 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/B0go/fin/database"
 	"github.com/B0go/fin/env"
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	_, err := env.MustGet()
+	cfg, err := env.Get()
 	if err != nil {
 		log.WithError(err).
 			Fatal("failed to load config")
+	}
+
+	_, err = database.Connect(cfg)
+	if err != nil {
+		log.WithError(err).
+			Fatal("failed to connect to db")
 	}
 
 	log.Info("starting fin")
