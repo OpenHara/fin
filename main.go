@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/B0go/fin/controller.go"
 	"github.com/B0go/fin/database"
 	"github.com/B0go/fin/env"
 	"github.com/apex/log"
@@ -18,7 +19,7 @@ func main() {
 			Fatal("failed to load config")
 	}
 
-	_, err = database.Connect(cfg)
+	db, err := database.Connect(cfg)
 	if err != nil {
 		log.WithError(err).
 			Fatal("failed to connect to db")
@@ -27,6 +28,7 @@ func main() {
 	log.Info("starting fin")
 	mux := mux.NewRouter()
 
+	mux.Path("/entries").Methods(http.MethodPost).HandlerFunc(controller.CreateEntry(db))
 	mux.HandleFunc("/status", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "OK") // nolint: gas
 	})
