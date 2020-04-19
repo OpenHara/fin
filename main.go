@@ -5,11 +5,18 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/B0go/fin/env"
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	_, err := env.MustGet()
+	if err != nil {
+		log.WithError(err).
+			Fatal("failed to load config")
+	}
+
 	log.Info("starting fin")
 	mux := mux.NewRouter()
 
@@ -24,7 +31,7 @@ func main() {
 		WriteTimeout: 15 * time.Second,
 	}
 
-	err := srv.ListenAndServe()
+	err = srv.ListenAndServe()
 	if err != nil {
 		log.WithError(err).Error("server startup failed")
 	}
